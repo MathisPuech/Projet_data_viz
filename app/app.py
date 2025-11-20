@@ -21,7 +21,7 @@ st.set_page_config(
 @st.cache_data
 def load_data():
     """Charge les données"""
-    return load_and_clean_data('data/processed/online_retail_clean.csv')
+    return load_and_clean_data('/home/margaux/code/projet-final/data/processed/online_retail_II_cleaned.csv')
 
 def display_filters():
     """Affiche les filtres dans la sidebar"""
@@ -505,6 +505,24 @@ def page_scenarios(df_filtered):
                         marker_color='darkblue'))
     fig.update_layout(barmode='group', height=400)
     st.plotly_chart(fig, use_container_width=True)
+
+    st.subheader("Analyse de sensibilité")
+    retention_range = np.arange(0.1, 0.9, 0.05)
+    clv_sensitivity = [
+        calculate_clv_formula(
+            baseline_metrics['avg_order_value'],
+            baseline_metrics['purchase_frequency'],
+            r,
+            discount_rate
+        ) for r in retention_range
+    ]
+
+    fig_sensitivity = px.line(
+        x=retention_range * 100,
+        y=clv_sensitivity,
+        labels={'x': 'Taux de rétention (%)', 'y': 'CLV (£)'}
+    )
+    st.plotly_chart(fig_sensitivity, use_container_width=True)    
 
 def page_export(df_filtered):
     """Page 5: Export"""
