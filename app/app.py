@@ -186,12 +186,24 @@ def page_cohorts(df_filtered):
     st.subheader("Matrice de rétention par cohorte")
     st.write("Lecture: Chaque ligne = une cohorte. Chaque colonne = âge en mois. Valeur = % de clients actifs.")
     
+    # Créer le texte avec % et effectifs
+    hover_text = []
+    for i in range(len(retention_rate)):
+        hover_row = []
+        for j in range(len(retention_rate.columns)):
+            rate = retention_rate.iloc[i, j]
+            count = retention_matrix.iloc[i, j] if not pd.isna(retention_matrix.iloc[i, j]) else 0
+            hover_row.append(f"{rate:.1f}%<br>({int(count)} clients)")
+        hover_text.append(hover_row)
+    
     fig = go.Figure(data=go.Heatmap(
         z=retention_rate.values,
         x=[f"M+{i}" for i in retention_rate.columns],
         y=retention_rate.index.astype(str),
         colorscale='RdYlGn',
         text=np.round(retention_rate.values, 1),
+        hovertext=hover_text,
+        hoverinfo='text',
         texttemplate='%{text}%',
         textfont={"size": 8},
         colorbar=dict(title="Retention (%)")
