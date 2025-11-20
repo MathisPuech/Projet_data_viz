@@ -21,7 +21,7 @@ st.set_page_config(
 @st.cache_data
 def load_data():
     """Charge les données"""
-    return load_and_clean_data('/home/margaux/code/projet-final/data/processed/online_retail_II_cleaned.csv')
+    return load_and_clean_data('data/processed/online_retail_clean.csv')
 
 def display_filters():
     """Affiche les filtres dans la sidebar"""
@@ -68,19 +68,29 @@ def display_filters():
         'min_order': min_order
     }
 
+def show_active_filters():
+    """Affiche les filtres actifs en haut de chaque page"""
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Période", f"{st.session_state.filters['date_range'][0]} - {st.session_state.filters['date_range'][1]}", 
+                 label_visibility="visible")
+    with col2:
+        st.metric("Pays", f"{len(st.session_state.filters['countries'])}", 
+                 label_visibility="visible")
+    with col3:
+        if st.session_state.filters['exclude_returns']:
+            st.error("🚫 Retours exclus")
+        else:
+            st.info("✓ Retours inclus")
+    with col4:
+        st.metric("Seuil commande", f"£{st.session_state.filters['min_order']:.0f}", 
+                 label_visibility="visible")
+    st.divider()
+
 def page_overview(df_filtered):
     """Page 1: Vue d'ensemble"""
     st.title("Vue d'ensemble - KPIs")
-    
-    # Afficher les filtres actifs
-    with st.expander("Filtres actifs"):
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.write(f"Période: {st.session_state.filters['date_range'][0]} - {st.session_state.filters['date_range'][1]}")
-        with col2:
-            st.write(f"Pays: {len(st.session_state.filters['countries'])} sélectionnés")
-        with col3:
-            st.write(f"Retours: {'Exclus' if st.session_state.filters['exclude_returns'] else 'Inclus'}")
+    show_active_filters()
     
     st.divider()
     
