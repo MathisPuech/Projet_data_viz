@@ -9,3 +9,4 @@
 ## Lancer l'app :
 pip install -r requirements.txt
 streamlit run app/app.py
+hello streamlite
