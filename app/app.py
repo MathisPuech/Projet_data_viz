@@ -172,6 +172,7 @@ def page_overview(df_filtered):
 def page_cohorts(df_filtered):
     """Page 2: Analyse des cohortes"""
     st.title("Analyse des Cohortes")
+    show_active_filters()
     
     st.info("Les cohortes regroupent les clients par leur mois de première commande pour suivre leur comportement dans le temps.")
     
@@ -219,6 +220,24 @@ def page_cohorts(df_filtered):
     fig.update_traces(line_color='#ff7f0e')
     st.plotly_chart(fig, use_container_width=True)
     
+    # Focus sur une cohorte spécifique
+    st.subheader("Focus sur une cohorte")
+    cohort_list = sorted(df_cohorts['CohortMonth'].unique().astype(str))
+    selected_cohort = st.selectbox("Sélectionner une cohorte", cohort_list)
+    
+    if selected_cohort:
+        cohort_data = df_cohorts[df_cohorts['CohortMonth'].astype(str) == selected_cohort]
+        
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Taille initiale", f"{cohort_data[cohort_data['CohortAge']==0]['Customer ID'].nunique()}")
+        with col2:
+            total_revenue = cohort_data['Amount'].sum()
+            st.metric("CA total généré", f"£{total_revenue:,.0f}")
+        with col3:
+            avg_age = cohort_data['CohortAge'].max()
+            st.metric("Age max observé", f"{avg_age} mois")
+    
     # Métriques
     col1, col2, col3 = st.columns(3)
     
@@ -240,6 +259,7 @@ def page_cohorts(df_filtered):
 def page_segments(df_filtered):
     """Page 3: Segmentation RFM"""
     st.title("Segmentation RFM")
+    show_active_filters()
     
     st.info("RFM: Recency (récence), Frequency (fréquence), Monetary (valeur). Chaque dimension est scorée de 1 à 5.")
     
@@ -332,6 +352,7 @@ def page_segments(df_filtered):
 def page_scenarios(df_filtered):
     """Page 4: Simulation de scénarios"""
     st.title("Simulation de Scenarios")
+    show_active_filters()
     
     st.info("Simulez l'impact de différentes actions marketing sur la CLV et la retention.")
     
@@ -476,6 +497,7 @@ def page_scenarios(df_filtered):
 def page_export(df_filtered):
     """Page 5: Export"""
     st.title("Export et Plan d'Action")
+    show_active_filters()
     
     st.info("Exportez les données et visualisations pour partager vos analyses.")
     
