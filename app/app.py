@@ -509,23 +509,25 @@ def page_export(df_filtered):
     with col1:
         st.subheader("Export des données")
         
-        if st.button("Télécharger données filtrées"):
-            csv = df_filtered.to_csv(index=False)
-            st.download_button(
-                label="Télécharger CSV",
-                data=csv,
-                file_name=f"data_filtered_{datetime.now().strftime('%Y%m%d')}.csv",
-                mime="text/csv"
-            )
+        # Export CSV données filtrées
+        csv_filtered = df_filtered.to_csv(index=False)
+        st.download_button(
+            label="📥 Télécharger données filtrées (CSV)",
+            data=csv_filtered,
+            file_name=f"data_filtered_{datetime.now().strftime('%Y%m%d')}.csv",
+            mime="text/csv"
+        )
         
-        if st.button("Télécharger analyse RFM"):
-            csv = rfm_df.to_csv(index=False)
-            st.download_button(
-                label="Télécharger RFM CSV",
-                data=csv,
-                file_name=f"rfm_{datetime.now().strftime('%Y%m%d')}.csv",
-                mime="text/csv"
-            )
+        # Export CSV RFM
+        csv_rfm = rfm_df.to_csv(index=False)
+        st.download_button(
+            label="📥 Télécharger analyse RFM (CSV)",
+            data=csv_rfm,
+            file_name=f"rfm_{datetime.now().strftime('%Y%m%d')}.csv",
+            mime="text/csv"
+        )
+        
+        st.info("💡 Pour exporter les graphiques en PNG, faites clic droit sur chaque graphique > 'Download plot as png'")
     
     with col2:
         st.subheader("Résumé de la session")
