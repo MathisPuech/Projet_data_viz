@@ -21,7 +21,7 @@ st.set_page_config(
 @st.cache_data
 def load_data():
     """Charge les données"""
-    return load_and_clean_data('/home/margaux/code/projet-final/data/processed/online_retail_II_cleaned.csv')
+    return load_and_clean_data('data/processed/online_retail_II_cleaned.csv')
 
 def display_filters():
     """Affiche les filtres dans la sidebar"""
